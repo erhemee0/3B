@@ -9,7 +9,6 @@ day_5 = ['home','school','home']
 
 days = day_1 + day_2 + day_3 + day_4 +day_5
 
-
-pairs = [(days[i], days[i + 1]) for i in range(len(days) - 1)]
+pairs = [(days[i], days[i + 1]) for i in range(len(days) - 1) if days[i]!=days[i+1]]
 
 print(collections.Counter(pairs))
