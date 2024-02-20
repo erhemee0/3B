@@ -10,6 +10,7 @@ public class lab1 {
         data[0] = Integer.valueOf(Integer.parseInt(input.split(";")[1].split(",")[0].split("=")[1].trim()));
         data[1] = Integer.valueOf(Integer.parseInt(input.split(";")[1].split(",")[1].split("=")[1].trim()));
         evaluate(expression, data);
+        scanner.close();
     }
 
     public static void evaluate(String expression, int data[]) {

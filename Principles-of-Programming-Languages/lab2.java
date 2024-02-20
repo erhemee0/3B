@@ -40,7 +40,7 @@ public class lab2 {
     }
 
     public static String[] lexId(String line) {
-        List<String> keywords = List.of("print", "int","string", "while", "if", "elif", "else");
+        List<String> keywords = List.of("print", "int", "string", "while", "if", "elif", "else");
         String id = "";
         for (int i = 0; i < line.length(); i++) {
             char c = line.charAt(i);
@@ -74,7 +74,7 @@ public class lab2 {
                 typ = result[0];
                 tok = result[1];
                 consumed = result[2];
-                counter += Integer.parseInt(consumed)+2;
+                counter += Integer.parseInt(consumed) + 2;
                 tokens.add(new Pair<>(typ, tok));
             } else if (ch == '=') {
                 typ = "ASSIGN";
@@ -118,50 +118,60 @@ public class lab2 {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String operation = "";
-        int num1, num2, res = 0;
+        String operation = "", res = "";
+        int num1, num2;
         List<Pair<String, String>> result;
 
         System.out.println("Оролтын утга:");
         String input = scanner.nextLine();
         result = lex(input);
 
-        System.out.println("Tokens:");
+        System.out.print("Tokens:");
         for (Pair<String, String> pair : result) {
-            System.out.println("(" + pair.type + ", " + pair.value + ")");
+            System.out.print("(" + pair.type + ", " + pair.value + ")");
         }
         List<String> types = new ArrayList<>();
         for (Pair<String, String> token : result) {
             types.add(token.type);
         }
-        System.out.println("Tokenii turuluud: " + types);
+        System.out.println("\nTokenii turuluud: " + types);
 
         List<Integer> nums = new ArrayList<>();
+        List<String> strings = new ArrayList<>();
         for (Pair<String, String> token : result) {
             if ("num".equals(token.type)) {
                 nums.add(Integer.valueOf(token.value));
+            } else if ("str".equals(token.type)) {
+                strings.add(token.value);
             }
         }
-        System.out.println("Toonuud: " + nums);
         for (Pair<String, String> token : result) {
             if ("OPERATION".equals(token.type)) {
                 operation = token.value;
             }
         }
-        System.out.println("Uildel: " + operation);
-        num1 = nums.get(0);
-        num2 = nums.get(1);
-        if ("+".equals(operation)) {
-            res = num1 + num2;
-        } else if ("-".equals(operation)) {
-            res = num1 - num2;
-        } else if ("*".equals(operation)) {
-            res = num1 * num2;
-        } else if ("/".equals(operation)) {
-            res = num1 / num2;
+        if (strings.size() != 0) {
+            System.out.println("Strings: " + strings);
+
+            res = strings.get(0) + strings.get(1);
         } else {
-            System.out.println("Tanihgui uildel bn");
+            System.out.println("Toonuud: " + nums);
+            
+            num1 = nums.get(0);
+            num2 = nums.get(1);
+            if ("+".equals(operation)) {
+                res = String.valueOf(num1 + num2);
+            } else if ("-".equals(operation)) {
+                res = String.valueOf(num1 - num2);
+            } else if ("*".equals(operation)) {
+                res = String.valueOf(num1 * num2);
+            } else if ("/".equals(operation)) {
+                res = String.valueOf(num1 / num2);
+            } else {
+                System.out.println("Tanihgui uildel bn");
+            }
         }
+        System.out.println("Uildel: " + operation);
         System.out.println("Garalt: " + result.get(1).value + "=" + res);
         scanner.close();
     }
