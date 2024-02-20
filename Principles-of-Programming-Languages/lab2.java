@@ -40,7 +40,7 @@ public class lab2 {
     }
 
     public static String[] lexId(String line) {
-        List<String> keywords = List.of("print", "int", "while", "if", "elif", "else");
+        List<String> keywords = List.of("print", "int","string", "while", "if", "elif", "else");
         String id = "";
         for (int i = 0; i < line.length(); i++) {
             char c = line.charAt(i);
@@ -74,7 +74,8 @@ public class lab2 {
                 typ = result[0];
                 tok = result[1];
                 consumed = result[2];
-                counter += Integer.parseInt(consumed);
+                counter += Integer.parseInt(consumed)+2;
+                tokens.add(new Pair<>(typ, tok));
             } else if (ch == '=') {
                 typ = "ASSIGN";
                 tok = "=";
@@ -118,7 +119,7 @@ public class lab2 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String operation = "";
-        int num1, num2, res=0;
+        int num1, num2, res = 0;
         List<Pair<String, String>> result;
 
         System.out.println("Оролтын утга:");
@@ -161,7 +162,7 @@ public class lab2 {
         } else {
             System.out.println("Tanihgui uildel bn");
         }
-        System.out.println("Garalt: " + res);
+        System.out.println("Garalt: " + result.get(1).value + "=" + res);
         scanner.close();
     }
 }
