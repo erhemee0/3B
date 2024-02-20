@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
 class Pair<A, B> {
     public final A type;
     public final B token;
@@ -14,7 +13,6 @@ class Pair<A, B> {
         this.token = token;
     }
 }
-
 
 public class lab2 {
     public static String[] lex_num(String line) {
@@ -60,7 +58,7 @@ public class lab2 {
         return new String[] { "ID", id, String.valueOf(id.length()) };
     }
 
-    public static String lex(String line) {
+    public static List<Pair<String, String>> lex(String line) {
         int counter = 0;
         String typ, tok, consumed;
         String result[];
@@ -79,40 +77,37 @@ public class lab2 {
                 tok = result[1];
                 consumed = result[2];
                 counter += Integer.valueOf(consumed);
+            } else if (ch == '=') {
+                typ = "ASSIGN";
+                tok = "=";
+                counter++;
+                tokens.add(new Pair<>(typ, tok));
+            } else if (ch == '+') {
+                typ = "OPERATION";
+                tok = "+";
+                counter++;
+                tokens.add(new Pair<>(typ, tok));
             } else if (Character.isAlphabetic(ch)) {
                 result = lex_id(line.substring(counter));
                 typ = result[0];
                 tok = result[1];
                 consumed = result[2];
                 counter += Integer.valueOf(consumed);
-            } else {
-                counter++;
+                tokens.add(new Pair<>(typ, tok));
             }
-
-            if(ch=='='){
-                typ = "ASSIGN";
-                tok = "=";
+            else {
                 counter++;
-                tokens.add(new Pair<>(typ, tok));
-            } else if(ch=='+'){
-                typ = "OPERATION";
-                tok = "+";
-                counter++;
-                tokens.add(new Pair<>(typ, tok));
             }
         }
 
-        return "";
+        return tokens;
     }
 
     public static void main(String[] args) {
         // lex("a4");
         Scanner scanner = new Scanner(System.in);
-        // String orolt = scanner.nextLine();
-        // String result[] = lex(orolt);
-        char ch= '=';
-        if(ch=='='){
-           System.out.println(new Pair<>("ASSIGN", '=').type);
-        }
+        String orolt = scanner.nextLine();
+        List<Pair<String, String>> result = lex(orolt);
+        System.out.println(result);
     }
 }
