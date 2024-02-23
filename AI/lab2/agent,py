@@ -1,0 +1,66 @@
+class VacuumCleanerAgent:
+    def __init__(self, goalState, currentState, location):
+        self.goalState = goalState
+        self.currentState = currentState
+        self.location = location
+        self.totalCost = 0
+
+    def printInformation(self, location):
+        print("Location " + location + " dirty")
+        print("Cleaning " + location)
+        print("Location " + location + " cleaned")
+
+    def move(self, direction):
+        print(self.location + " -> " + direction)
+        self.location = direction
+        self.totalCost += 1
+
+    def clean(self, location):
+        self.currentState[location] = 0
+        self.printInformation(location)
+        self.totalCost += 1
+
+    def plan(self):
+        while self.currentState != self.goalState:
+            if self.currentState[self.location] == 1:
+                self.clean(self.location)
+            else:
+                for direction, state in self.currentState.items():
+                    if state == 1:
+                        self.move(direction)
+                        break
+
+        print("Result:", self.currentState)
+        return self.totalCost
+
+    def reflex_agent(self):
+        while self.currentState != self.goalState:
+            if self.currentState[self.location] == 1:
+                self.clean(self.location)
+            else:
+                for direction, state in self.currentState.items():
+                    if state == 1:
+                        self.move(direction)
+                        break
+
+        print("Current:", self.currentState)
+        return self.totalCost
+
+    def execute(self):
+        self.reflex_agent()
+
+
+numRooms = int(input("Niit heden uruutei ve: "))
+
+goalState = {}
+currentState = {}
+
+location = input("Ehnii bairshiliig oruulna uu: ")
+currentState[location] = 0
+for i in range(1, numRooms + 1):
+    room = chr(ord("A") + i - 1)
+    currentState[room] = int(input("Uruu " + room+" bohir eseh" + " (0/1): "))
+    goalState[room] = 0
+
+vacuumCleanerAgent = VacuumCleanerAgent(goalState, currentState, location)
+vacuumCleanerAgent.execute()
