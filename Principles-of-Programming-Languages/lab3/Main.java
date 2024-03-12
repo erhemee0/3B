@@ -8,7 +8,7 @@ public class Main {
 		Binary b2 = new Binary(new Operator('*'), term2a, term2b);
 		Expression term_main = new Binary(new Operator('+'), term1, b2);
 
-		Variable z = new Variable("int");
+		Variable z = new Variable("z");
 		Assignment assignment1	 = new Assignment(z, term_main);
 		System.out.println(assignment1.toString());
 	}
