@@ -115,11 +115,16 @@ class NQueensProblem(Problem):
             node = frontier.pop()
             if problem.goal_test(node.state):
                 return node
-        frontier.extend(node.expand(problem))
+            frontier.extend(node.expand(problem))
         return None
     
-nQueensProblem = NQueensProblem(6)
-gnode = nQueensProblem.breadth_first_tree_search()
-print(gnode)
+# nQueensProblem = NQueensProblem(6)
+# gnode = nQueensProblem.depth_first_tree_search()
+# print(gnode)
 
-print(Node.path(gnode))
+# print(Node.path(gnode))
+
+# gnode = nQueensProblem.breadth_first_tree_search()
+# print(gnode)
+
+# print(Node.path(gnode))

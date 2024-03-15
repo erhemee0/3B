@@ -1,6 +1,6 @@
 import random
 from collections import deque
-from jishee import *
+from jishee import Problem,Node
 
 
 class ThreeByThreeMatrixProblem(Problem):
@@ -72,6 +72,10 @@ class ThreeByThreeMatrixProblem(Problem):
 
         while frontier:
             node = frontier.popleft()
+            state = node.state
+            for row in state:
+                print(row)
+            print()
             if problem.goal_test(node.state):
                 return node
             explored.add(node.state)
@@ -102,24 +106,27 @@ class ThreeByThreeMatrixProblem(Problem):
                     frontier.append(child_node)
         return None
     
-# Test the 3x3 matrix solver with random initial state
-three_by_three_matrix_problem = ThreeByThreeMatrixProblem()
-# three_by_three_matrix_problem = ThreeByThreeMatrixProblem(((1, 2, 0), (4, 5, 3), (7, 8, 6)))
+# three_by_three_matrix_problem = ThreeByThreeMatrixProblem()
+three_by_three_matrix_problem = ThreeByThreeMatrixProblem(((1, 2, 3), (0, 4, 5), (7, 8, 6)))
 print("Initial state:")
 for row in three_by_three_matrix_problem.initial:
     print(row)
+
+print('\nbreadth-first')
 solution_node = ThreeByThreeMatrixProblem.breadth_first_search(three_by_three_matrix_problem)
 if solution_node:
     solution_path = solution_node.solution()
-    print("\nSolution found with {} moves:".format(len(solution_path)))
+    print("Solution found with {} moves:".format(len(solution_path)))
     # for action in solution_path:
-        # print(action)
+    #     print(action)
 else:
     print("No solution found.")
+
+print('\ndepth-first')
 solution_node = ThreeByThreeMatrixProblem.depth_first_search(three_by_three_matrix_problem)
 if solution_node:
     solution_path = solution_node.solution()
-    print("\nSolution found with {} moves:".format(len(solution_path)))
+    print("Solution found with {} moves:".format(len(solution_path)))
     # for action in solution_path:
     #     print(action)
 else:
