@@ -58,7 +58,7 @@ public class Lexer {
         return new String[] { "ID", id, String.valueOf(id.length()) };
     }
 
-    public static List<Token<String, String>> lex(String line) {
+    public static Token<String, String> lex(String line) {
         while (counter < line.length()) {
             char ch = line.charAt(counter);
             if (Character.isDigit(ch)) {
@@ -67,64 +67,66 @@ public class Lexer {
                 tok = result[1];
                 consumed = result[2];
                 counter += Integer.parseInt(consumed);
-                tokens.add(new Token<>(typ, tok));
+                return new Token<>(typ, tok);
             } else if (ch == '"' || ch == '\'') {
                 result = lexStr(line.substring(counter));
                 typ = result[0];
                 tok = result[1];
                 consumed = result[2];
                 counter += Integer.parseInt(consumed) + 2;
-                tokens.add(new Token<>(typ, tok));
+                return new Token<>(typ, tok);
             } else if (ch == '=') {
                 typ = "ASSIGN";
                 tok = "=";
                 counter++;
-                tokens.add(new Token<>(typ, tok));
+                return new Token<>(typ, tok);
             } else if (ch == '+') {
                 typ = "OPERATION";
                 tok = "+";
                 counter++;
-                tokens.add(new Token<>(typ, tok));
+                return new Token<>(typ, tok);
             } else if (ch == '-') {
                 typ = "OPERATION";
                 tok = "-";
                 counter++;
-                tokens.add(new Token<>(typ, tok));
+                return new Token<>(typ, tok);
             } else if (ch == '*') {
                 typ = "OPERATION";
                 tok = "*";
                 counter++;
-                tokens.add(new Token<>(typ, tok));
+                return new Token<>(typ, tok);
             } else if (ch == '/') {
                 typ = "OPERATION";
                 tok = "/";
                 counter++;
-                tokens.add(new Token<>(typ, tok));
+                return new Token<>(typ, tok);
             } else if (Character.isAlphabetic(ch)) {
                 result = lexId(line.substring(counter));
                 typ = result[0];
                 tok = result[1];
                 consumed = result[2];
                 counter += Integer.parseInt(consumed);
-                tokens.add(new Token<>(typ, tok));
+                return new Token<>(typ, tok);
             } else if (ch == ';') {
                 typ = "SEMICOLON";
                 tok = ";";
                 counter++;
-                tokens.add(new Token<>(typ, tok));
+                return new Token<>(typ, tok);
             } else {
                 counter++;
             }
         }
-        return tokens;
+        return null;
     }
 
     public static Token<String, String> get_next_token() {
-        if (tokens == null) {
-            tokens = lex(cur_line);
-        }
-        if (cur_index >= tokens.size()) {
-            return null;
+        if (tokens == null || cur_index >= tokens.size()) {
+            Token<String, String> nextToken = lex(cur_line);
+            if (nextToken == null) {
+                return null;
+            } else {
+                tokens.add(nextToken);
+            }
         }
         return tokens.get(cur_index++);
     }
@@ -142,7 +144,6 @@ public class Lexer {
 
     public static void main(String[] args) {
         cur_line = "int y;";
-        tokens = lex(cur_line);
         cur_token = get_next_token();
         Token<String, String> key1 = match("KEYWORD");
         Token<String, String> id1 = match("ID");
