@@ -6,6 +6,7 @@ class TicTacToeState:
     def __init__(self, size=3):
         self.size = size
         # Init empty board
+        print(size)
         self.emptyBoard()
         self.choice = ()
         self.turn = 0
@@ -215,8 +216,12 @@ class TicTacToeGUI:
 
 def main():
     pygame.init()
-    size = int(input("Enter the size of the board (e.g., 3 for 3x3, 4 for 4x4, etc.): "))
-    game = TicTacToeGUI(size)
+    size_input = input("Enter the size of the board (e.g., 3 for 3x3, 4 for 4x4, etc.): ")
+    try:
+        size = int(size_input)
+        game = TicTacToeGUI(size)
+    except ValueError:
+        game = TicTacToeGUI()
     game.game_loop()
 
 
