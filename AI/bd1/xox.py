@@ -181,28 +181,21 @@ class TicTacToeGUI:
             if self.state.playerWinner():
                 font = pygame.font.SysFont(None, 120)
                 text = font.render("Player Wins!", True, (0, 0, 0))
-                text_width, text_height = font.size("Player Wins!")
-                text_x = (self.width - text_width) // 2
-                text_y = (self.height - text_height) // 2
-                self.screen.blit(text, (text_x, text_y))
+                text_rect = text.get_rect(center=(self.width/2, self.height/2))
+                self.screen.blit(text, text_rect)
                 running = False
             elif self.state.computerWinner():
                 font = pygame.font.SysFont(None, 110)
                 text = font.render("Computer Wins!", True, (0, 0, 0))
-                text_width, text_height = font.size("Computer Wins!")
-                text_x = (self.width - text_width) // 2
-                text_y = (self.height - text_height) // 2
-                self.screen.blit(text, (text_x, text_y))
+                text_rect = text.get_rect(center=(self.width/2, self.height/2))
+                self.screen.blit(text, text_rect)
                 running = False
             elif self.state.isDraw():
-                font = pygame.font.SysFont(None, 120)
+                font = pygame.font.SysFont(None, 110)
                 text = font.render("Draw!", True, (0, 0, 0))
-                text_width, text_height = font.size("Draw!")
-                text_x = (self.width - text_width) // 2
-                text_y = (self.height - text_height) // 2
-                self.screen.blit(text, (text_x, text_y))
+                text_rect = text.get_rect(center=(self.width/2, self.height/2))
+                self.screen.blit(text, text_rect)
                 running = False
-
 
             pygame.display.flip()
 
