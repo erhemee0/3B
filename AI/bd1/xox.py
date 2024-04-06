@@ -3,10 +3,9 @@ import random
 import copy
 
 class TicTacToeState:
-    def __init__(self, size=3):
+    def __init__(self, size):
         self.size = size
         # Init empty board
-        print(size)
         self.emptyBoard()
         self.choice = ()
         self.turn = 0
@@ -22,18 +21,9 @@ class TicTacToeState:
 
     def pos2str(self, n):
         return TicTacToeState.pos2strMap[n]
-
-    def printBoard(self):
-        print("-------------------")
-        for row in self.board:
-            print("|".join([self.pos2str(cell) for cell in row]))
-            print("-------------------")
-
+    
     def hasEnded(self):
         return any([self.playerWinner(), self.computerWinner(), self.noMoreMoves()])
-
-    def isEmpty(self):
-        return all(-1 in row for row in self.board)
 
     def isDraw(self):
         return not self.playerWinner() and not self.computerWinner() and self.noMoreMoves()
@@ -68,10 +58,6 @@ class TicTacToeState:
             self.turn = 1 - self.turn
         else:
             raise RuntimeError('Place {0},{1} occupied by {2}'.format(row, col, self.board[row][col]))
-
-    def eraseMove(self, row, col):
-        self.verifyValidMove(row, col)
-        self.board[row][col] = -1
 
     def verifyValidMove(self, row, col):
         if not 0 <= row < self.size or not 0 <= col < self.size:
@@ -155,11 +141,11 @@ class TicTacToeGUI:
         self.screen.fill((255, 255, 255))
         # Draw vertical lines
         for x in range(1, self.size):
-            pygame.draw.line(self.screen, (0, 0, 0), (x * self.cell_size, 0), (x * self.cell_size, self.height), 5)
+            pygame.draw.line(self.screen, (190, 190, 190), (x * self.cell_size, 0), (x * self.cell_size, self.height), 5)
 
         # Draw horizontal lines
         for y in range(1, self.size):
-            pygame.draw.line(self.screen, (0, 0, 0), (0, y * self.cell_size), (self.width, y * self.cell_size), 5)
+            pygame.draw.line(self.screen, (190, 190, 190), (0, y * self.cell_size), (self.width, y * self.cell_size), 5)
 
     def draw_symbols(self):
         for row in range(self.size):
@@ -193,20 +179,30 @@ class TicTacToeGUI:
             self.draw_symbols()
 
             if self.state.playerWinner():
-                font = pygame.font.SysFont(None, 80)
+                font = pygame.font.SysFont(None, 120)
                 text = font.render("Player Wins!", True, (0, 0, 0))
-                self.screen.blit(text, (self.width // 4, self.height // 2))
+                text_width, text_height = font.size("Player Wins!")
+                text_x = (self.width - text_width) // 2
+                text_y = (self.height - text_height) // 2
+                self.screen.blit(text, (text_x, text_y))
                 running = False
             elif self.state.computerWinner():
-                font = pygame.font.SysFont(None, 80)
+                font = pygame.font.SysFont(None, 110)
                 text = font.render("Computer Wins!", True, (0, 0, 0))
-                self.screen.blit(text, (self.width // 5, self.height // 2))
+                text_width, text_height = font.size("Computer Wins!")
+                text_x = (self.width - text_width) // 2
+                text_y = (self.height - text_height) // 2
+                self.screen.blit(text, (text_x, text_y))
                 running = False
             elif self.state.isDraw():
-                font = pygame.font.SysFont(None, 80)
+                font = pygame.font.SysFont(None, 120)
                 text = font.render("Draw!", True, (0, 0, 0))
-                self.screen.blit(text, (self.width // 3, self.height // 2))
+                text_width, text_height = font.size("Draw!")
+                text_x = (self.width - text_width) // 2
+                text_y = (self.height - text_height) // 2
+                self.screen.blit(text, (text_x, text_y))
                 running = False
+
 
             pygame.display.flip()
 
