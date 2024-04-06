@@ -3,14 +3,15 @@ import random
 import copy
 
 class TicTacToeState:
-    def __init__(self):
+    def __init__(self, size=3):
+        self.size = size
         # Init empty board
         self.emptyBoard()
         self.choice = ()
         self.turn = 0
 
     def emptyBoard(self):
-        self.board = [[-1 for _ in range(4)] for _ in range(4)]
+        self.board = [[-1 for _ in range(self.size)] for _ in range(self.size)]
 
     # Str repr of positions
     pos2strMap = {
@@ -22,10 +23,10 @@ class TicTacToeState:
         return TicTacToeState.pos2strMap[n]
 
     def printBoard(self):
-        print("---------------")
+        print("-------------------")
         for row in self.board:
             print("|".join([self.pos2str(cell) for cell in row]))
-            print("---------------")
+            print("-------------------")
 
     def hasEnded(self):
         return any([self.playerWinner(), self.computerWinner(), self.noMoreMoves()])
@@ -45,11 +46,11 @@ class TicTacToeState:
             if all(cell == who for cell in row):
                 return True
         # Check verticals
-        for col in range(4):
+        for col in range(self.size):
             if all(row[col] == who for row in self.board):
                 return True
         # Check diagonals
-        if all(self.board[i][i] == who for i in range(4)) or all(self.board[i][3 - i] == who for i in range(4)):
+        if all(self.board[i][i] == who for i in range(self.size)) or all(self.board[i][self.size - 1 - i] == who for i in range(self.size)):
             return True
         return False
 
@@ -72,7 +73,7 @@ class TicTacToeState:
         self.board[row][col] = -1
 
     def verifyValidMove(self, row, col):
-        if not 0 <= row < 4 or not 0 <= col < 4:
+        if not 0 <= row < self.size or not 0 <= col < self.size:
             raise RuntimeError('Invalid position')
 
     def placeMovePlayer(self, row, col):
@@ -94,7 +95,7 @@ class TicTacToeState:
             return 0
 
     def availableMoves(self):
-        return [(row, col) for row in range(4) for col in range(4) if self.board[row][col] == -1]
+        return [(row, col) for row in range(self.size) for col in range(self.size) if self.board[row][col] == -1]
 
     def computerMove(self):
         self.computeNextMoveAt(-999999, 999999)
@@ -140,35 +141,37 @@ class TicTacToeState:
 
 
 class TicTacToeGUI:
-    def __init__(self):
-        self.state = TicTacToeState()
-        self.width = 480
-        self.height = 480
+    def __init__(self, size=3):
+        self.state = TicTacToeState(size)
+        self.size = size
+        self.cell_size = 600 // size
+        self.width = self.cell_size * size
+        self.height = self.cell_size * size
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Tic Tac Toe")
 
     def draw_board(self):
         self.screen.fill((255, 255, 255))
         # Draw vertical lines
-        for x in range(1, 5):
-            pygame.draw.line(self.screen, (0, 0, 0), (x * 120, 0), (x * 120, 480), 5)
+        for x in range(1, self.size):
+            pygame.draw.line(self.screen, (0, 0, 0), (x * self.cell_size, 0), (x * self.cell_size, self.height), 5)
 
         # Draw horizontal lines
-        for y in range(1, 5):
-            pygame.draw.line(self.screen, (0, 0, 0), (0, y * 120), (480, y * 120), 5)
+        for y in range(1, self.size):
+            pygame.draw.line(self.screen, (0, 0, 0), (0, y * self.cell_size), (self.width, y * self.cell_size), 5)
 
     def draw_symbols(self):
-        for row in range(4):
-            for col in range(4):
-                cell_center_x = col * 120 + 60
-                cell_center_y = row * 120 + 60
+        for row in range(self.size):
+            for col in range(self.size):
+                cell_center_x = col * self.cell_size + self.cell_size // 2
+                cell_center_y = row * self.cell_size + self.cell_size // 2
                 if self.state.board[row][col] == 0:
-                    pygame.draw.circle(self.screen, (0, 0, 255), (cell_center_x, cell_center_y), 30, 10)
+                    pygame.draw.circle(self.screen, (0, 0, 255), (cell_center_x, cell_center_y), self.cell_size // 3, 10)
                 elif self.state.board[row][col] == 1:
-                    pygame.draw.line(self.screen, (255, 0, 0), (cell_center_x - 35, cell_center_y + 35),
-                                     (cell_center_x + 35, cell_center_y - 35), 10)
-                    pygame.draw.line(self.screen, (255, 0, 0), (cell_center_x - 35, cell_center_y - 35),
-                                     (cell_center_x + 35, cell_center_y + 35), 10)
+                    pygame.draw.line(self.screen, (255, 0, 0), (cell_center_x - self.cell_size // 3.5, cell_center_y + self.cell_size // 3.5),
+                                     (cell_center_x + self.cell_size // 3.5, cell_center_y - self.cell_size // 3.5), 12)
+                    pygame.draw.line(self.screen, (255, 0, 0), (cell_center_x - self.cell_size // 3.5, cell_center_y - self.cell_size // 3.5),
+                                     (cell_center_x + self.cell_size // 3.5, cell_center_y + self.cell_size // 3.5), 12)
 
     def game_loop(self):
         running = True
@@ -178,8 +181,8 @@ class TicTacToeGUI:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = pygame.mouse.get_pos()
-                    col = x // 120
-                    row = y // 120
+                    col = x // self.cell_size
+                    row = y // self.cell_size
                     if self.state.board[row][col] == -1:
                         self.state.placeMovePlayer(row, col)
                         if not self.state.hasEnded():
@@ -191,17 +194,17 @@ class TicTacToeGUI:
             if self.state.playerWinner():
                 font = pygame.font.SysFont(None, 80)
                 text = font.render("Player Wins!", True, (0, 0, 0))
-                self.screen.blit(text, (80, 200))
+                self.screen.blit(text, (self.width // 4, self.height // 2))
                 running = False
             elif self.state.computerWinner():
                 font = pygame.font.SysFont(None, 80)
                 text = font.render("Computer Wins!", True, (0, 0, 0))
-                self.screen.blit(text, (40, 200))
+                self.screen.blit(text, (self.width // 5, self.height // 2))
                 running = False
             elif self.state.isDraw():
                 font = pygame.font.SysFont(None, 80)
                 text = font.render("Draw!", True, (0, 0, 0))
-                self.screen.blit(text, (180, 200))
+                self.screen.blit(text, (self.width // 3, self.height // 2))
                 running = False
 
             pygame.display.flip()
@@ -209,10 +212,13 @@ class TicTacToeGUI:
         pygame.time.wait(2000)  # Wait for 2 seconds before quitting
         pygame.quit()
 
+
 def main():
     pygame.init()
-    game = TicTacToeGUI()
+    size = int(input("Enter the size of the board (e.g., 3 for 3x3, 4 for 4x4, etc.): "))
+    game = TicTacToeGUI(size)
     game.game_loop()
+
 
 if __name__ == "__main__":
     main()
