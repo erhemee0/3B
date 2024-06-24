@@ -1,18 +1,12 @@
-public class Variable extends VariableRef {
-    private String name;
-    private Token<String, String> key;
-    private Token<String, String> id;
+class Variable {
+    String name;
 
     public Variable(String name) {
         this.name = name;
     }
 
-    public Variable(Token<String, String> key1, Token<String, String> id1) {
-        this.key = key1;
-        this.id = id1;
-    }
-
+    @Override
     public String toString() {
-        return "Key: " + key + " id: " + id;
+        return name;
     }
 }

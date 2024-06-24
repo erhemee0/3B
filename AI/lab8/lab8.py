@@ -25,13 +25,12 @@ def kmeans_manhattan(X, n_clusters, max_iter=100):
     return clusters, centroids
 
 
-np.random.seed(4)
+np.random.seed()
 X, _ = np.random.randn(1000, 2), None
-
-n_clusters = 3
+n_clusters = 6
 cluster_labels, centroids = kmeans_manhattan(X, n_clusters)
 
-colors = ['r', 'g', 'b']
+colors = ['r', 'g', 'b','y','c','g']
 for i in range(n_clusters):
     cluster_points = np.array([X[j] for j in range(len(X)) if cluster_labels[j] == i])
     plt.scatter(cluster_points[:,0], cluster_points[:,1], c=colors[i], label=f'Cluster {i+1}')
